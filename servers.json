@@ -1,20 +1,56 @@
 [
   {
-    "Name": "",
-    "Check": [""],
-    "Group": "",
-    "Domain": ""
+    "Name": "tog8k-dc",
+    "Check": ["DC", "DISKSPACE", "EVENTLOG"],
+    "Group": "ActiveDirectory",
+    "Domain": "tog"
   },
   {
-    "Name": "",
-    "Check": [""],
-    "Group": "",
-    "Domain": ""
+    "Name": "tog12dc",
+    "Check": ["DC", "DISKSPACE", "EVENTLOG"],
+    "Group": "ActiveDirectory",
+    "Domain": "tog"
   },
   {
-    "Name": "",
-    "Check": [""],
-    "Group": "",
-    "Domain": ""
+    "Name": "tog8kexch2010",
+    "Check": ["EXCH", "DISKSPACE", "EVENTLOG", "SME"],
+    "Group": "Exchange",
+    "Domain": "tog"
+  },
+  {
+    "Name": "win16sql",
+    "Check": ["SQLSERVER", "DISKSPACE", "EVENTLOG"],
+    "Group": "Sql",
+    "Domain": "tog"
+  },
+  {
+    "Name": "FileServer8k",
+    "Check": ["FILESERVER", "DISKSPACE", "EVENTLOG"],
+    "Group": "Sql",
+    "Domain": "tog"
+  },
+  {
+    "Name": "hyperv",
+    "Check": ["HYPERV", "DISKSPACE", "EVENTLOG"],
+    "Group": "HYPERV",
+    "Domain": "tog"
+  },
+  {
+    "Name": "certsrv",
+    "Check": ["CERTIFICATE", "DISKSPACE", "EVENTLOG"],
+    "Group": "CERTIFICATE",
+    "Domain": "tog"
+  },
+  {
+    "Name": "terminal",
+    "Check": ["TERMINAL", "DISKSPACE", "EVENTLOG"],
+    "Group": "TERMINAL",
+    "Domain": "tog"
+  },
+  {
+    "Name": "vcenter",
+    "Check": ["VCENTER", "DISKSPACE", "EVENTLOG", "SVC"],
+    "Group": "VMWARE",
+    "Domain": "tog"
   }
 ]
