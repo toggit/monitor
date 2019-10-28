@@ -7,7 +7,7 @@ function ADHealth {
    [CmdletBinding()]
    param (
        [Parameter()]
-       [Int32]
+       [String]
        $DC
    )
    $timeout = "60"
@@ -25,13 +25,33 @@ function ADHealth {
    }
 
    $result
+   $DC
    #####################################Get ALL DC Servers#################################
-   $getForest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest()
-   $DCServers = $getForest.domains | ForEach-Object { $_.DomainControllers } | ForEach-Object { $_.Name } 
-   if ($DC -in $DCServers) {
-      $result.isDC = $true
+   #$getForest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest()
+   #$DCServers = $getForest.domains | ForEach-Object { $_.DomainControllers } | ForEach-Object { $_.Name }
+   #t
+   ##############isDC Status################
+   $serviceStatus = start-job -scriptblock { Get-WmiObject -ComputerName $($args[0]) -Class Win32_OperatingSystem -ErrorAction SilentlyContinue } -ArgumentList $DC
+   wait-job $serviceStatus -timeout $timeout
+   if ($serviceStatus.state -like "Running") {
+      Write-Host $DC `t Netlogon Service TimeOut -ForegroundColor Yellow
+      stop-job $serviceStatus
    }
-
+   else {
+      $serviceStatus1 = Receive-job $serviceStatus
+      $serviceStatus1
+      break;
+      if ($serviceStatus1.status -eq "Running") {
+         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green   
+         $result.isDC = $true       
+      }
+      else { 
+         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red 
+         $svcName = $serviceStatus1.name 
+         $svcState = $serviceStatus1.status          
+      } 
+   }
+   wait-job $serviceStatus
    ##############Netlogon Service Status################
    $serviceStatus = start-job -scriptblock { get-service -ComputerName $($args[0]) -Name "Netlogon" -ErrorAction SilentlyContinue } -ArgumentList $DC
    wait-job $serviceStatus -timeout $timeout
@@ -199,7 +219,7 @@ function ADHealth {
       }
    }
    ########################################################
-   foreach($key in $result.keys){
+   foreach($key in @($result.keys)){
       if($result[$key] -eq $false){
          $result.status = $false
       } 
@@ -210,5 +230,5 @@ function ADHealth {
 ########################################################################################
 
 ########################################################################################
-ADHealth
+ADHealth -DC "newdc"
 		
