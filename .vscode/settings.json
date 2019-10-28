@@ -1,3 +1,4 @@
 {
-    "powershell.scriptAnalysis.settingsPath": "PSScriptAnalayzerSetting.psd1"
+    "powershell.scriptAnalysis.settingsPath": "PSScriptAnalayzerSetting.psd1",
+    "editor.formatOnSave": true
 }

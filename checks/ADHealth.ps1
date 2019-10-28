@@ -6,22 +6,22 @@
 function ADHealth {
    [CmdletBinding()]
    param (
-       [Parameter()]
-       [String]
-       $DC
+      [Parameter()]
+      [String]
+      $DC
    )
    $timeout = "60"
    $result = @{ 
-      isDC         = $false
-      NetLogon_Service     = $false
-      NTDS_Service         = $false
-      DNS_Service         = $false
-      Netlogon       = $false
-      Replications = $false
-      sysvol       = $false
-      Advertising  = $false
-      FSMOCheck    = $false
-      status    = $true
+      isDC             = $false
+      NetLogon_Service = $false
+      NTDS_Service     = $false
+      DNS_Service      = $false
+      Netlogon         = $false
+      Replications     = $false
+      sysvol           = $false
+      Advertising      = $false
+      FSMOCheck        = $false
+      status           = $true
    }
 
    $result
@@ -219,8 +219,8 @@ function ADHealth {
       }
    }
    ########################################################
-   foreach($key in @($result.keys)){
-      if($result[$key] -eq $false){
+   foreach ($key in @($result.keys)) {
+      if ($result[$key] -eq $false) {
          $result.status = $false
       } 
    }
