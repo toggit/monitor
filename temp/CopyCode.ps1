@@ -116,3 +116,16 @@
 
 
 # [Int32](New-TimeSpan -Start (get-job).PSBeginTime).TotalSeconds
+
+
+# Invoke-Command -Computername 'Server01' -Credential $Credential { whoami }
+# $Hash = @{
+#     'Admin'      = Get-Credential -Message 'Please enter administrative credentials'
+#     'RemoteUser' = Get-Credential -Message 'Please enter remote user credentials'
+#     'User'       = Get-Credential -Message 'Please enter user credentials'
+# }
+# $Hash | Export-Clixml -Path "${env:\userprofile}\Hash.Cred"
+# $Hash = Import-CliXml -Path "${env:\userprofile}\Hash.Cred"
+# Invoke-Command -ComputerName Server01 -Credential $Hash.Admin -ScriptBlock { whoami }
+# Invoke-Command -ComputerName Server01 -Credential $Hash.RemoteUser -ScriptBlock { whoami }
+# Invoke-Command -ComputerName Server01 -Credential $Hash.User -ScriptBlock { whoami }

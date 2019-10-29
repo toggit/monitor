@@ -20,23 +20,28 @@ function GetSecuity {
         $Security
     )
 
+    $Credential = $null
     $SecurityPath = Join-Path $PSScriptRoot $("$Security.Cred")
-    $Credential = Get-Credential
-    $Credential | Export-CliXml -Path "${env:\userprofile}\Jaap.Cred"
-    $Credential = Import-CliXml -Path "${env:\userprofile}\Jaap.Cred"
-    Invoke-Command -Computername 'Server01' -Credential $Credential { whoami }
 
-    $Hash = @{
-        'Admin'      = Get-Credential -Message 'Please enter administrative credentials'
-        'RemoteUser' = Get-Credential -Message 'Please enter remote user credentials'
-        'User'       = Get-Credential -Message 'Please enter user credentials'
+    if (-not $($global:Security)) {
+        $global:Security = @{ }
     }
-    $Hash | Export-Clixml -Path "${env:\userprofile}\Hash.Cred"
-    $Hash = Import-CliXml -Path "${env:\userprofile}\Hash.Cred"
-    Invoke-Command -ComputerName Server01 -Credential $Hash.Admin -ScriptBlock { whoami }
-    Invoke-Command -ComputerName Server01 -Credential $Hash.RemoteUser -ScriptBlock { whoami }
-    Invoke-Command -ComputerName Server01 -Credential $Hash.User -ScriptBlock { whoami }
+    $global:Security
+    
+
+    if (Test-Path -Path $SecurityPath) {
+        $Credential = Import-CliXml -Path "$SecurityPath"
+    }
+    elseif (IsNonInteractiveShell) {
+        $Credential = Get-Credential - -Message "Please enter $Security credentials" 
+        $Credential | Export-CliXml -Path "$SecurityPath"
+        $global:Security["$Security"] = $Credential
+    }
+
+    return $Credential
 }
+
 Clear-Host
 IsNonInteractiveShell
+GetSecuity -Security "tog"
 $host.Name

@@ -2,16 +2,19 @@
 Clear-Host
 
 # import scripts
-(Get-ChildItem -Path (Join-Path $PSScriptRoot checks) -Filter *.ps1 -Recurse) | % {
-    . $_.FullName
-}
+# (Get-ChildItem -Path (Join-Path $PSScriptRoot checks) -Filter *.ps1 -Recurse) | % {
+#     . $_.FullName
+# }
 
+$global:Security = @{ }
 # Load Servers to Monitor
 $myDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-Write-Output $myDir\servers.json
+# Write-Output $myDir\servers.json
 $Servers = Get-Content -Raw -Path $myDir\servers.json | ConvertFrom-Json
-$Servers
+$Servers[8].Name
+$Servers[8].Check[1]
 
+Get-Variable -Scope local
 # Start Monitor
 # foreach ($srv in $Servers) {
 #     if (test-Connection -ComputerName $srv.Name -Count 2 -Quiet ) {
@@ -38,4 +41,4 @@ $Servers
 
 # addIP
 # $Servers.IP
-$Servers | select * | FT -AutoSize
+# $Servers | select * | FT -AutoSize
