@@ -19,7 +19,8 @@ function test {
     Write-Output "b: $b, a: $a"
 
 }
-test
+# test
 $MyInvocation.MyCommand.Path
 $PSScriptRoot
 Join-Path $PSScriptRoot Functions
+$global:Security

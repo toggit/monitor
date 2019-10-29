@@ -12,7 +12,15 @@ function IsNonInteractiveShell {
     return $false
 }
 
-function secuity {
+function GetSecuity {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [String]
+        $Security
+    )
+
+    $SecurityPath = Join-Path $PSScriptRoot $("$Security.Cred")
     $Credential = Get-Credential
     $Credential | Export-CliXml -Path "${env:\userprofile}\Jaap.Cred"
     $Credential = Import-CliXml -Path "${env:\userprofile}\Jaap.Cred"
