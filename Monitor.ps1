@@ -6,7 +6,6 @@ Clear-Host
 #     . $_.FullName
 # }
 
-$global:Security = @{ }
 # Load Servers to Monitor
 $myDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 # Write-Output $myDir\servers.json
