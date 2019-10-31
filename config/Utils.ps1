@@ -19,10 +19,9 @@ function GetSecuity {
         [String]
         $Security
     )
-
+    #TODO: create hidden directory .cred  for security files and remove the suffix .cred
     $Credential = $null
     $SecurityPath = Join-Path $PSScriptRoot $("$Security.Cred")
-
     if (-not $($script:SecurityList)) {
         $script:SecurityList = @{ }
     }
