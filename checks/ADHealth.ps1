@@ -5,13 +5,18 @@
 
 function ADHealth {
    [CmdletBinding()]
+   [OutputType([Hashtable])]
    param (
-      [Parameter()]
+      [Parameter(Mandatory = $true)]
       [String]
-      $DC
+      $DC,
+      [Parameter(Mandatory = $true)]
+      [System.Management.Automation.PSCredential]
+      $Cred
    )
+
    $timeout = "60"
-   $result = @{ 
+   $result = @{
       isDC             = $false
       NetLogon_Service = $false
       NTDS_Service     = $false
@@ -24,13 +29,16 @@ function ADHealth {
       status           = $true
    }
 
-   $result
-   $DC
+   Write-Verbose "result: $result"
+   Write-Verbose "DC: $DC"
+   Write-Verbose "Cred: $Cred"
    #####################################Get ALL DC Servers#################################
    #$getForest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest()
    #$DCServers = $getForest.domains | ForEach-Object { $_.DomainControllers } | ForEach-Object { $_.Name }
-   #t
+
+   #########################################
    ##############isDC Status################
+   # TODO: add cred security object for Get-WmiObject function call.
    $serviceStatus = start-job -scriptblock { Get-WmiObject -ComputerName $($args[0]) -Class Win32_OperatingSystem -ErrorAction SilentlyContinue } -ArgumentList $DC
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
@@ -43,7 +51,7 @@ function ADHealth {
       break;
       if ($serviceStatus1.status -eq "Running") {
          Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green   
-         $result.isDC = $true       
+         $result.isDC = $true
       }
       else { 
          Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red 
@@ -222,13 +230,14 @@ function ADHealth {
    foreach ($key in @($result.keys)) {
       if ($result[$key] -eq $false) {
          $result.status = $false
-      } 
+      }
    }
 
-   $result
-} 
+   return $result
+}
 ########################################################################################
 
 ########################################################################################
-ADHealth -DC "newdc"
-		
+
+# TODO: need to check that this script check file is working.
+# ADHealth -DC "newdc"
