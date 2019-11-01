@@ -239,5 +239,5 @@ function ADHealth {
 
 ########################################################################################
 
-# TODO: need to check that this script check file is working.
+# TODO: need to check that ADHealth script working.
 # ADHealth -DC "newdc"

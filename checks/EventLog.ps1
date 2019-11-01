@@ -20,4 +20,4 @@ function EventLog {
     $Result
 }
 # Clear-Host
-EventLog 
+EventLog

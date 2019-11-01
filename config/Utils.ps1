@@ -21,17 +21,21 @@ function GetSecuity {
     )
     #TODO: create hidden directory .cred  for security files and remove the suffix .cred
     $Credential = $null
-    $SecurityPath = Join-Path $PSScriptRoot $("$Security.Cred")
+    $CredentialPath = Join-Path $PSScriptRoot ".cred"
+    $SecurityPath = Join-Path $CredentialPath "$Security"
     if (-not $($script:SecurityList)) {
         $script:SecurityList = @{ }
     }
-    $script:SecurityList
+    Write-Verbose "SecurityList: $script:SecurityList"
     if (-not $script:SecurityList.contains($Security)) {
         if (Test-Path -Path $SecurityPath ) {
             $Credential = Import-CliXml -Path "$SecurityPath"
         }
         elseif (IsNonInteractiveShell) {
             $Credential = Get-Credential -Message "Please enter $Security credentials"
+            if (-not (Test-Path -Path $CredentialPath)) {
+                New-Item -ItemType Directory -Force -Path $CredentialPath
+            }
             $Credential | Export-CliXml -Path "$SecurityPath"
         }
         $script:SecurityList.Add($Security, $Credential)
@@ -42,7 +46,7 @@ function GetSecuity {
     return $Credential
 }
 
-# Clear-Host
+Clear-Host
 # IsNonInteractiveShell
-# GetSecuity -Security "tog"
+GetSecuity -Security "tog"
 # $host.Name

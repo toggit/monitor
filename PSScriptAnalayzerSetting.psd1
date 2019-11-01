@@ -20,8 +20,9 @@ PSScriptAnalyzerSettings.psd1
             # Simply list the targeted versions of PowerShell here
             TargetVersions = @(
                 '3.0',
-                '5.1',
-                '6.2'
+                '5.1'
+                # '5.1',
+                # '6.2'
             )
         }
     }
