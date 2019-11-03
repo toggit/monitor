@@ -72,10 +72,12 @@ foreach ($srv in $Servers) {
     if ($srv.Session) {
         foreach ($chk in $srv.Check) {
             # TODO: check if function exist
-            $cmd = Get-Command -Name $chk.Name
+            $cmd = Get-Command -Name $chk.Name -ErrorAction SilentlyContinue
             if ($chk -and $chk.Name -eq $cmd.Name) {
                 $scriptBlock = Get-Item -Path function:$($cmd.Name)
-                Invoke-Command -Session $srv.Session -ScriptBlock { $scriptBlock } -ArgumentList $x, $y
+                $rst = Invoke-Command -Session $srv.Session -ScriptBlock $scriptBlock.ScriptBlock
+                # -ArgumentList $srv.Name
+                $rst
             }
         }
     }

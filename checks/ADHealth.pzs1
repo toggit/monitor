@@ -9,10 +9,7 @@ function ADHealth {
    param (
       [Parameter(Mandatory = $true)]
       [String]
-      $DC,
-      [Parameter(Mandatory = $true)]
-      [System.Management.Automation.PSCredential]
-      $Cred
+      $DC
    )
 
    $timeout = "60"
@@ -31,7 +28,6 @@ function ADHealth {
 
    Write-Verbose "result: $result"
    Write-Verbose "DC: $DC"
-   Write-Verbose "Cred: $Cred"
    #####################################Get ALL DC Servers#################################
    #$getForest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest()
    #$DCServers = $getForest.domains | ForEach-Object { $_.DomainControllers } | ForEach-Object { $_.Name }
@@ -40,7 +36,7 @@ function ADHealth {
    ##############isDC Status################
    # TODO: add cred security object for Get-WmiObject function call.
    # -ErrorAction SilentlyContinue 
-   $serviceStatus = start-job -scriptblock { Get-CIMObject -Credential $($args[1]) -ComputerName $($args[0]) -ClassName Win32_OperatingSystem } -ArgumentList $DC, $Cred
+   $serviceStatus = start-job -scriptblock { Get-wmiObject -Class Win32_OperatingSystem }
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
       Write-Host $DC `t Netlogon Service TimeOut -ForegroundColor Yellow
@@ -48,7 +44,7 @@ function ADHealth {
    }
    else {
       $serviceStatus1 = Receive-job $serviceStatus
-      $serviceStatus1 | select *
+      $serviceStatus1 | Select-Object PSComputerName, ProductType
       # break;
       if ($serviceStatus1.ProductType -eq 2) {
          Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green   
@@ -62,7 +58,7 @@ function ADHealth {
    }
    wait-job $serviceStatus
    ##############Netlogon Service Status################
-   $serviceStatus = start-job -scriptblock { get-service -ComputerName $($args[0]) -Name "Netlogon" -ErrorAction SilentlyContinue } -ArgumentList $DC
+   $serviceStatus = start-job -scriptblock { get-service -Name "Netlogon" -ErrorAction SilentlyContinue }
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
       Write-Host $DC `t Netlogon Service TimeOut -ForegroundColor Yellow
@@ -84,7 +80,7 @@ function ADHealth {
    }
    ######################################################
    ##############NTDS Service Status################
-   $serviceStatus = start-job -scriptblock { get-service -ComputerName $($args[0]) -Name "NTDS" -ErrorAction SilentlyContinue } -ArgumentList $DC
+   $serviceStatus = start-job -scriptblock { get-service -Name "NTDS" -ErrorAction SilentlyContinue } 
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
       Write-Host $DC `t NTDS Service TimeOut -ForegroundColor Yellow
@@ -106,7 +102,7 @@ function ADHealth {
    }
    ######################################################
    ##############DNS Service Status################
-   $serviceStatus = start-job -scriptblock { get-service -ComputerName $($args[0]) -Name "DNS" -ErrorAction SilentlyContinue } -ArgumentList $DC
+   $serviceStatus = start-job -scriptblock { get-service -Name "DNS" -ErrorAction SilentlyContinue }
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
       Write-Host $DC `t DNS Server Service TimeOut -ForegroundColor Yellow
