@@ -39,7 +39,8 @@ function ADHealth {
    #########################################
    ##############isDC Status################
    # TODO: add cred security object for Get-WmiObject function call.
-   $serviceStatus = start-job -scriptblock { Get-WmiObject -ComputerName $($args[0]) -Class Win32_OperatingSystem -ErrorAction SilentlyContinue } -ArgumentList $DC
+   # -ErrorAction SilentlyContinue 
+   $serviceStatus = start-job -scriptblock { Get-CIMObject -Credential $($args[1]) -ComputerName $($args[0]) -ClassName Win32_OperatingSystem } -ArgumentList $DC, $Cred
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
       Write-Host $DC `t Netlogon Service TimeOut -ForegroundColor Yellow
@@ -47,9 +48,9 @@ function ADHealth {
    }
    else {
       $serviceStatus1 = Receive-job $serviceStatus
-      $serviceStatus1
-      break;
-      if ($serviceStatus1.status -eq "Running") {
+      $serviceStatus1 | select *
+      # break;
+      if ($serviceStatus1.ProductType -eq 2) {
          Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green   
          $result.isDC = $true
       }
@@ -240,4 +241,4 @@ function ADHealth {
 ########################################################################################
 
 # TODO: need to check that ADHealth script working.
-# ADHealth -DC "newdc"
+# ADHealth -DC "newdc" -Cred (GetSecuity -Security "tog")

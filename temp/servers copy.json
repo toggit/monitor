@@ -1,0 +1,94 @@
+[
+  {
+    "Name": "tog8dc1",
+    "Check": [
+      { "Name": "ADHealth", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "ActiveDirectory",
+    "Security": "tog"
+  },
+  {
+    "Name": "tog12dc1",
+    "Check": [
+      { "Name": "ADHealth", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "ActiveDirectory",
+    "Security": "tog"
+  },
+  {
+    "Name": "tog8kexch2010",
+    "Check": [
+      { "Name": "EXCH", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" },
+      { "Name": "SME", "Security": "tog" }
+    ],
+    "Group": "Exchange",
+    "Security": "tog"
+  },
+  {
+    "Name": "win16sql",
+    "Check": [
+      { "Name": "SQLSERVER", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "Sql",
+    "Security": "tog"
+  },
+  {
+    "Name": "FileServer8k",
+    "Check": [
+      { "Name": "FILESERVER", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "Sql",
+    "Security": "tog"
+  },
+  {
+    "Name": "hyperv",
+    "Check": [
+      { "Name": "HYPERV", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "HYPERV",
+    "Security": "tog"
+  },
+  {
+    "Name": "certsrv",
+    "Check": [
+      { "Name": "CERTIFICATE", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "CERTIFICATE",
+    "Security": "tog"
+  },
+  {
+    "Name": "terminal",
+    "Check": [
+      { "Name": "TERMINAL", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "TERMINAL",
+    "Security": "tog"
+  },
+  {
+    "Name": "vcenter",
+    "Check": [
+      { "Name": "VCENTER", "Security": "tog" },
+      { "Name": "SVC", "Security": "tog" },
+      { "Name": "DiskSpace", "Security": "tog" },
+      { "Name": "EventLog", "Security": "tog" }
+    ],
+    "Group": "VMWARE",
+    "Security": "tog"
+  }
+]

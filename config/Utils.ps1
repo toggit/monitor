@@ -19,7 +19,6 @@ function GetSecuity {
         [String]
         $Security
     )
-    #TODO: create hidden directory .cred  for security files and remove the suffix .cred
     $Credential = $null
     $CredentialPath = Join-Path $PSScriptRoot ".cred"
     $SecurityPath = Join-Path $CredentialPath "$Security"
@@ -48,5 +47,5 @@ function GetSecuity {
 
 Clear-Host
 # IsNonInteractiveShell
-GetSecuity -Security "tog"
+# GetSecuity -Security "tog"
 # $host.Name
