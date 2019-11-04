@@ -13,6 +13,6 @@ function DiskSpace {
         @{n = "UsedSpace(%)"; e = { [Int32](100 - (([math]::Round($_.FreeSpace / 1gb, 2)) / ([math]::Round($_.Size / 1gb, 2))) * 100) } },
         @{n = "status"; e = { [Int32](100 - (([math]::Round($_.FreeSpace / 1gb, 2)) / ([math]::Round($_.Size / 1gb, 2))) * 100) -le $threshold } }
 
-    return $DISKS
+    $DISKS
 }
 # DiskSpace 90

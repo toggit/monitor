@@ -75,9 +75,8 @@ foreach ($srv in $Servers) {
             $cmd = Get-Command -Name $chk.Name -ErrorAction SilentlyContinue
             if ($chk -and $chk.Name -eq $cmd.Name) {
                 $scriptBlock = Get-Item -Path function:$($cmd.Name)
-                $rst = Invoke-Command -Session $srv.Session -ScriptBlock $scriptBlock.ScriptBlock
-                # -ArgumentList $srv.Name
-                $rst
+                $result = Invoke-Command -Session $srv.Session -ScriptBlock $scriptBlock.ScriptBlock
+                $chk | Add-Member -MemberType NoteProperty -Name "Result" -Value $result
             }
         }
     }

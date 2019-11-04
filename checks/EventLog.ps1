@@ -20,7 +20,7 @@ function EventLog {
         $Result.status = $true
         # $EVENTLOG | ft -AutoSize
         if ($temp[0].Count -gt 0) {
-            $Result.status = $false    
+            $Result.status = $false
         }
     }
     $Result

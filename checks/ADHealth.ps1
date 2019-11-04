@@ -7,9 +7,9 @@ function ADHealth {
    [CmdletBinding()]
    [OutputType([Hashtable])]
    param (
-      [Parameter(Mandatory = $true)]
+      [Parameter(Mandatory = $false)]
       [String]
-      $DC
+      $DC = (Get-WmiObject Win32_OperatingSystem).CSName
    )
 
    $timeout = "60"
@@ -34,8 +34,6 @@ function ADHealth {
 
    #########################################
    ##############isDC Status################
-   # TODO: add cred security object for Get-WmiObject function call.
-   # -ErrorAction SilentlyContinue 
    $serviceStatus = start-job -scriptblock { Get-wmiObject -Class Win32_OperatingSystem }
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
@@ -44,16 +42,12 @@ function ADHealth {
    }
    else {
       $serviceStatus1 = Receive-job $serviceStatus
-      $serviceStatus1 | Select-Object PSComputerName, ProductType
-      # break;
       if ($serviceStatus1.ProductType -eq 2) {
-         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green   
+         Write-Host $DC `t $serviceStatus1.CSName `t $serviceStatus1.status -ForegroundColor Green   
          $result.isDC = $true
       }
       else { 
-         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status          
+         Write-Host $DC `t $serviceStatus1.CSName `t $serviceStatus1.status -ForegroundColor Red
       } 
    }
    wait-job $serviceStatus
@@ -67,20 +61,16 @@ function ADHealth {
    else {
       $serviceStatus1 = Receive-job $serviceStatus
       if ($serviceStatus1.status -eq "Running") {
-         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status   
+         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green
          $result.NetLogon_Service = $true       
       }
-      else { 
-         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status          
-      } 
+      else {
+         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red
+      }
    }
    ######################################################
    ##############NTDS Service Status################
-   $serviceStatus = start-job -scriptblock { get-service -Name "NTDS" -ErrorAction SilentlyContinue } 
+   $serviceStatus = start-job -scriptblock { get-service -Name "NTDS" -ErrorAction SilentlyContinue }
    wait-job $serviceStatus -timeout $timeout
    if ($serviceStatus.state -like "Running") {
       Write-Host $DC `t NTDS Service TimeOut -ForegroundColor Yellow
@@ -90,14 +80,10 @@ function ADHealth {
       $serviceStatus1 = Receive-job $serviceStatus
       if ($serviceStatus1.status -eq "Running") {
          Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status    
          $result.NTDS_Service = $true         
       }
       else { 
-         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status          
+         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red       
       } 
    }
    ######################################################
@@ -112,14 +98,10 @@ function ADHealth {
       $serviceStatus1 = Receive-job $serviceStatus
       if ($serviceStatus1.status -eq "Running") {
          Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Green 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status   
          $result.DNS_Service = $true
       }
       else { 
-         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red 
-         $svcName = $serviceStatus1.name 
-         $svcState = $serviceStatus1.status          
+         Write-Host $DC `t $serviceStatus1.name `t $serviceStatus1.status -ForegroundColor Red          
       } 
    }
    ######################################################
@@ -229,7 +211,6 @@ function ADHealth {
          $result.status = $false
       }
    }
-
    return $result
 }
 ########################################################################################
