@@ -22,7 +22,7 @@
   {
     "Name": "tog8kexch2010",
     "Check": [
-      { "Name": "EXCH", "Security": "tog" },
+      { "Name": "ExchangeHealth", "Security": "tog" },
       { "Name": "DiskSpace", "Security": "tog" },
       { "Name": "EventLog", "Security": "tog" },
       { "Name": "SME", "Security": "tog" }

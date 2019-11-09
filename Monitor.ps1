@@ -27,7 +27,12 @@ Write-Verbose "to server file path: $myDir\servers.json"
 <#  TODO: need to check if the servers.json file exist and then to read from it
           if the file does not exist need to send mail alert and exit the script
 #>
-$Servers = Get-Content -Raw -Path $myDir\servers.json | ConvertFrom-Json
+try {
+    $Servers = Get-Content -Raw -Path $myDir\servers.json | ConvertFrom-Json
+}
+catch {
+    
+}
 
 
 ##################################################################
@@ -71,12 +76,14 @@ foreach ($srv in $Servers) {
     # Start monitor checks on server
     if ($srv.Session) {
         foreach ($chk in $srv.Check) {
-            # TODO: check if function exist
             $cmd = Get-Command -Name $chk.Name -ErrorAction SilentlyContinue
             if ($chk -and $chk.Name -eq $cmd.Name) {
                 $scriptBlock = Get-Item -Path function:$($cmd.Name)
                 $result = Invoke-Command -Session $srv.Session -ScriptBlock $scriptBlock.ScriptBlock
                 $chk | Add-Member -MemberType NoteProperty -Name "Result" -Value $result
+            }
+            else {
+                Write-Error "function $($chk.Name) for server $($srv.name)"
             }
         }
     }
